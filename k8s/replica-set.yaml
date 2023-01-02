@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ReplicaSet
+metadata:
+  name: 'node-server'
+  labels:
+    app: 'node-server'
+spec:
+  selector:
+    matchLabels:
+      app: 'node-server'
+  replicas: 1
+  template:
+    metadata:
+      name: 'node-server'
+      labels:
+        app: 'node-server'
+    spec:
+      containers:
+        - name: 'node-server'
+          image: tequelequeteque/app_full_cycle:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: 'APP_PORT'
+              value: '3000'
+          resources:
+            requests:
+              memory: '64Mi'
+              cpu: '0.5Ki'
+            limits:
+              memory: '128Mi'
+              cpu: '1Ki'

@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: stress-test
+spec:
+  ttlSecondsAfterFinished: 0
+  template:
+    spec:
+      containers:
+        - name: fortio
+          image: fortio/fortio:latest
+          args: ["load", "-c", "4", "-qps", "0", "-t", "90s", "http://node-server-service/health"]
+      restartPolicy: Never

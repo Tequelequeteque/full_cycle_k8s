@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+spec:
+  selector:
+    matchLabels:
+      app: db-postgres
+  serviceName: db-postgres-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: db-postgres
+    spec:
+      containers:
+      - name: db-postgres
+        image: postgres:alpine
+        env: 
+          - name: POSTGRES_PASSWORD
+            value: 'postgres'
+          - name: POSTGRES_USER
+            value: 'postgres'
+          - name: POSTGRES_DB
+            value: 'postgres'
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: db-postgres-pv-claim
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: db-postgres-pv-claim
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi

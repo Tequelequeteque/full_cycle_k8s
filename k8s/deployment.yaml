@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 'node-server'
+  labels:
+    app: 'node-server'
+spec:
+  selector:
+    matchLabels:
+      app: 'node-server'
+  replicas: 1
+  template:
+    metadata:
+      name: 'node-server'
+      labels:
+        app: 'node-server'
+    spec:
+      containers:
+        - name: 'node-server'
+          envFrom: 
+            - configMapRef: 
+                name: 'node-server-env'
+          image: tequelequeteque/app_full_cycle:latest
+          ports:
+            - containerPort: 3000
+          startupProbe:
+            httpGet:
+              path: '/health'
+              port: 3000
+          readinessProbe:
+            httpGet:
+              path: '/health'
+              port: 3000
+          livenessProbe:
+            httpGet:
+              path: '/health'
+              port: 3000
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '1'
